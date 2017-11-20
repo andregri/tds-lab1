@@ -1,0 +1,279 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Practica 1. Transfromada discreta de Fourier</title><meta name="generator" content="MATLAB 9.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-11-10"><meta name="DC.source" content="Practica1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Practica 1. Transfromada discreta de Fourier</h1><!--introduction--><p>El objetivo de esta primera pr&aacute;ctica es estudiar las propiedades de la Transformada Discreta de Fourier y su inversa, as&iacute; como claricar conceptos como Resoluci&oacute;n Espectral, Zero Padding, Enventanado, etc. Finalmente se aplicar&aacute; el algoritmo de Goertzel para la detecci&oacute;n de tonos en un sistema de alarmas.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Tarea 1</a></li><li><a href="#2">Tarea 2</a></li><li><a href="#3">Tarea 3</a></li></ul></div><h2 id="1">Tarea 1</h2><p><img src="Practica1_eq16004347703842497051.png" alt="$$ x(n) = a^{n} u(n) $$"></p><p><img src="Practica1_eq02506306270127538892.png" alt="$$ x(z) = \frac{1}{1-az^{-1}} |a|<1 $$"></p><p><img src="Practica1_eq12975485465469801625.png" alt="$$ z = e^{jw} $$"></p><p><img src="Practica1_eq11746358283389383818.png" alt="$$ X(w) = \frac{1}{1-a e^{-jw}} $$"></p><pre class="codeinput">clear <span class="string">all</span>;
+close <span class="string">all</span>;
+
+a = input(<span class="string">'Introduce a:'</span>);
+N = input(<span class="string">'Introduce N:'</span>);
+
+n = 0:N-1;
+x = a.^n;
+wk = 2*pi*(0:N-1)/N;
+X = 1./ (1-a*exp(-1i*wk));
+
+xrec = ifft(X);
+xrecimag = imag(xrec);
+xrecreal = real(xrec);
+
+figure();
+stem(n,xrecreal,<span class="string">'b'</span>);hold <span class="string">on</span>;
+stem(n,x,<span class="string">'ro'</span>);
+
+hold <span class="string">off</span>;
+xlabel(<span class="string">'n'</span>);
+title([<span class="string">'a='</span>,num2str(a),<span class="string">' N='</span>,num2str(N)]);
+legend(<span class="string">'x(n)'</span>,<span class="string">'x(n)_{rec}ifft'</span>)
+
+<span class="comment">% cuando el valor de a se acerca a 1, el error entre la se&ntilde;al recuperada</span>
+<span class="comment">% con la ifft y la se&ntilde;al original aumenta.</span>
+</pre><pre class="codeoutput error">Error using input
+Cannot call INPUT from EVALC.
+
+Error in Practica1 (line 20)
+a = input('Introduce a:');
+</pre><h2 id="2">Tarea 2</h2><pre class="codeinput">clear <span class="string">all</span>;
+close <span class="string">all</span>;
+
+L = 5;
+x = ones(1,L);
+<span class="keyword">for</span> N = [5 10 20 50 100 1000]
+    n = 0:N-1;
+    w = 2*n/N; <span class="comment">% frecuencia normalizada en [0:1]</span>
+    X = abs(fft(x,N));
+    figure;
+    stem(w,X);
+    xlabel(<span class="string">'Normalised frequency'</span>);
+    ylabel(<span class="string">'Magnitude'</span>);
+    title([<span class="string">'L='</span>,num2str(L),<span class="string">' N='</span>,num2str(N)]);
+<span class="keyword">end</span>
+
+<span class="comment">% El zero padding no a&ntilde;ade informaci&oacute;n adicional, permite ver mejor el</span>
+<span class="comment">% perfil del espectro. Recupero siempre la misma se&ntilde;al.</span>
+</pre><h2 id="3">Tarea 3</h2><pre class="codeinput">clear
+close <span class="string">all</span>
+clc
+
+Fm = 1000;
+tt = [25 25 100 100];
+N = [25 100 100 1000];
+
+<span class="keyword">for</span> i=1:4
+    F1 = 90;
+    F2 = 100;
+    F3 = 240;
+    F4 = 360;
+    t = (Fm*tt(i))*0.001;
+    x1 = cos(2*pi*(F1/Fm)*(0:t-1)) + cos(2*pi*(F2/Fm)*(0:t-1));
+    x2 = x1 + cos(2*pi*(F3/Fm)*(0:t-1)) + cos(2*pi*(F4/Fm)*(0:t-1));
+    y = fft(x2);
+    <span class="comment">% Generamos el eje X para interpretar frecuencias</span>
+    t1 = (0:t-1)*Fm/tt(i);
+    figure;
+    plot(t1,abs(y),<span class="string">'*-r'</span>);
+    yy = fft(x2,N(i));
+    hold <span class="string">on</span>
+    t2 = (0:N(i)-1)*Fm/N(i);
+    plot(t2,abs(yy),<span class="string">'+-k'</span>)
+    legend([<span class="string">'L='</span> num2str(t), <span class="string">' N='</span> num2str(t)],[<span class="string">'L='</span> num2str(t),<span class="string">' N='</span> num2str(N(i))])
+    axis([0 Fm/2 0 max([abs(y) abs(yy)])]);
+    grid
+<span class="keyword">end</span>
+<span class="comment">% t=25ms Fm=1000 L=25 N=25</span>
+<span class="comment">% La resoluci&oacute;n fisica es $$ R_f = \frac{Fm}{L} = 40Hz $$ pero la</span>
+<span class="comment">% diferencia m&agrave;s peque&ntilde;a es de 10HZ. Por eso no podemos discernir las</span>
+<span class="comment">% frecuencias F1=90Hz y F2=100Hz.</span>
+
+<span class="comment">% t=25ms Fm=1000 L=25 N&gt;25</span>
+<span class="comment">% Aunque el orden de la DFT es mayor (la resoluci&oacute;n computacional es mayor),</span>
+<span class="comment">% la resoluci&oacute;n fisica es siempre la misma. Entonces no podemos discernir</span>
+<span class="comment">% las frecuencias F1 y F2.</span>
+
+<span class="comment">% t=100ms Fm=1000 L=100 N=100</span>
+<span class="comment">% Hemos aumentado el numero de muestras de la se&ntilde;al L 4 veces y la</span>
+<span class="comment">% resoluci&oacute;n fisica es exactamente 10Hz. Ahora es posible ver F1 y F2</span>
+
+<span class="comment">% t=100ms Fm=1000 L=100 N=1000</span>
+<span class="comment">% si aumentamos N (zero padding), anadimos puntos en el espectro y aparecen</span>
+<span class="comment">% los puntos de la ventana rectangular superpuesta. Los picos en dos</span>
+<span class="comment">% frecunecias diferentes de F1 y F2 porque los lobulos se solapan al espectro.</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Practica 1. Transfromada discreta de Fourier
+% El objetivo de esta primera práctica es estudiar las propiedades de la 
+% Transformada Discreta de Fourier y su inversa, así como claricar 
+% conceptos como Resolución Espectral, Zero Padding, Enventanado, etc.
+% Finalmente se aplicará el algoritmo de Goertzel para la detección de
+% tonos en un sistema de alarmas.
+
+%% Tarea 1
+% $$ x(n) = a^{n} u(n) $$
+%
+% $$ x(z) = \frac{1}{1-az^{-1}} |a|<1 $$
+%
+% $$ z = e^{jw} $$
+%
+% $$ X(w) = \frac{1}{1-a e^{-jw}} $$
+
+clear all;
+close all;
+
+a = input('Introduce a:');
+N = input('Introduce N:');
+
+n = 0:N-1;
+x = a.^n;
+wk = 2*pi*(0:N-1)/N;
+X = 1./ (1-a*exp(-1i*wk));
+
+xrec = ifft(X); 
+xrecimag = imag(xrec);
+xrecreal = real(xrec);
+
+figure();
+stem(n,xrecreal,'b');hold on;
+stem(n,x,'ro');
+
+hold off;
+xlabel('n');
+title(['a=',num2str(a),' N=',num2str(N)]);
+legend('x(n)','x(n)_{rec}ifft')
+
+% cuando el valor de a se acerca a 1, el error entre la señal recuperada 
+% con la ifft y la señal original aumenta.
+
+%% Tarea 2
+clear all;
+close all;
+
+L = 5;
+x = ones(1,L);
+for N = [5 10 20 50 100 1000]
+    n = 0:N-1;
+    w = 2*n/N; % frecuencia normalizada en [0:1]
+    X = abs(fft(x,N));
+    figure;
+    stem(w,X);
+    xlabel('Normalised frequency');
+    ylabel('Magnitude');
+    title(['L=',num2str(L),' N=',num2str(N)]);
+end
+
+% El zero padding no añade información adicional, permite ver mejor el 
+% perfil del espectro. Recupero siempre la misma señal.
+
+%% Tarea 3
+clear
+close all
+clc
+
+Fm = 1000;
+tt = [25 25 100 100];
+N = [25 100 100 1000];
+
+for i=1:4
+    F1 = 90;
+    F2 = 100;
+    F3 = 240;
+    F4 = 360;
+    t = (Fm*tt(i))*0.001;
+    x1 = cos(2*pi*(F1/Fm)*(0:t-1)) + cos(2*pi*(F2/Fm)*(0:t-1));
+    x2 = x1 + cos(2*pi*(F3/Fm)*(0:t-1)) + cos(2*pi*(F4/Fm)*(0:t-1));
+    y = fft(x2);
+    % Generamos el eje X para interpretar frecuencias
+    t1 = (0:t-1)*Fm/tt(i);
+    figure;
+    plot(t1,abs(y),'*-r');
+    yy = fft(x2,N(i));
+    hold on
+    t2 = (0:N(i)-1)*Fm/N(i);
+    plot(t2,abs(yy),'+-k')
+    legend(['L=' num2str(t), ' N=' num2str(t)],['L=' num2str(t),' N=' num2str(N(i))])
+    axis([0 Fm/2 0 max([abs(y) abs(yy)])]);
+    grid
+end
+% t=25ms Fm=1000 L=25 N=25
+% La resolución fisica es $$ R_f = \frac{Fm}{L} = 40Hz $$ pero la
+% diferencia màs pequeña es de 10HZ. Por eso no podemos discernir las
+% frecuencias F1=90Hz y F2=100Hz.
+
+% t=25ms Fm=1000 L=25 N>25
+% Aunque el orden de la DFT es mayor (la resolución computacional es mayor),
+% la resolución fisica es siempre la misma. Entonces no podemos discernir 
+% las frecuencias F1 y F2.
+
+% t=100ms Fm=1000 L=100 N=100
+% Hemos aumentado el numero de muestras de la señal L 4 veces y la
+% resolución fisica es exactamente 10Hz. Ahora es posible ver F1 y F2
+
+% t=100ms Fm=1000 L=100 N=1000
+% si aumentamos N (zero padding), anadimos puntos en el espectro y aparecen 
+% los puntos de la ventana rectangular superpuesta. Los picos en dos
+% frecunecias diferentes de F1 y F2 porque los lobulos se solapan al espectro. 
+##### SOURCE END #####
+--></body></html>
